@@ -1,107 +1,242 @@
 #include <iostream>
 
-//template<typename tdata>
+// Template basis node class
+template<typename tData>
 class Node
 {
+	// Node data concealment class
 private:
-	int data = 0;
-	Node* next = nullptr;
+	tData data;
+	Node<tData>* next;
+	int nodeSize = 0;
 
-	// tdata data;
-	// Node<tdata>* next;
-
+	// Node Data Access
 public:
-	// get data is this method
-	void CreateNode(int value)
+	// Data getter/setter
+	tData GetData()
 	{
-
+		// data = getData;
+		return data;
+	}
+	void SetData(tData setData)
+	{
+		data = setData;
 	}
 
-	void DeleteNode(int value)
+	// next getter/setter
+	tData GetNext()
 	{
-
+		return next;
+	}
+	void SetNext(tData setNext)
+	{
+		next = setNext;
 	}
 
-	// ???? 굳이 여기 안넣어도 될 것 같은데;;
-	void SearchNode(int value)
+	int SizeCount()
 	{
+		return nodeSize;
+	}
 
+	void InitiCount(int InitiValue)
+	{
+		nodeSize = InitiValue;
 	}
 };
 
-//template<typename tdata>
+template <typename tData>
 class LinkedList
 {
-private:
-	Node* head;
-	Node* tail;
-	Node* arrow;
 
+private:
+	Node<tData>* head;
+	Node<tData>* tail;
+	Node<tData>* tailFinder;
 	int listSize = 0;
 
-	// Node<tdata>* head;
-	// Node<tdata>* tail;
-	// Node<tdata>* arrow;
-
 public:
-	// Create Constructor
-	// LinkedList->head & LinkedList->tail is initialization
 	LinkedList() : head(nullptr), tail(nullptr) {}
-	// Create Destructor
 	~LinkedList() {}
 
-	// Create LinkedList
-	void CreateList(int value)
+	// Using property 
+	__declspec(property(get = GetData, put = SetData)) tData getData;
+	__declspec(property(get = GetNext, put = SetNext)) tData inputNext;
+	__declspec(property(get = SizeCount, put = InitiCount)) int size;
+
+	void AddLinkedList(tData listData)
 	{
-		
+		Node<tData>* node = new Node<tData>;
+
+		listSize++;
+		node->data = listData;
+		node->next = nullptr;
+
+		if (head == nullptr)
+		{
+			head = getData;
+			tail = getData;
+		}
+		else
+		{
+			tail->next = node;
+			tail = tail->next;
+		}
 	}
 
-	// Remove LinkedList
-	void RemoveList(int value)
+	void RemoveList(tData removeData)
 	{
+		Node<tData>* ptr = head;
+		Node<tData>* tmp = ptr;
 
+		while (ptr != nullptr)
+		{
+			if (ptr->value == removeData)
+			{
+				break;
+			}
+			else
+			{
+				tmp = ptr;
+				ptr = ptr->next;
+			}
+		}
+
+		if (ptr == nullptr)
+		{
+			std::cout << "Node data is not found" << std::endl;
+		}
+		else
+		{
+			listSize--;
+			std::cout << "Node data delete is complete : " << ptr->value << std::endl;
+			tmp->next = ptr->next;
+			delete ptr;
+		}
 	}
 
-	// Create head value
-	void CreateHead(int value)
+	void ShowLinkedList()
 	{
+		Node<tData>* node = head;
 
+		while (node != nullptr)
+		{
+			std::cout << node->data << "->";
+			node = node->next;
+		}
+		std::cout << std::endl;
 	}
 
-	// Delete head value
-	void DeleteHead(int value)
+	void DeleteList()
 	{
+		Node<tData>* ptr = head;
 
+		while (ptr != nullptr)
+		{
+			head = ptr->next;
+			delete ptr;
+			ptr = head;
+		}
+
+		delete head;
+		listSize = 0;
+		std::cout << "All list delete is complete..." << std::endl;
 	}
 
-	// Create tail value
-	void CreateTail(int value)
+	void RemoveTail()
 	{
+		Node<tData>* ptr = head;
+		Node<tData>* tmp = new Node<tData>;
 
+		while (ptr->next != nullptr)
+		{
+			tmp = ptr;
+			ptr = ptr->next;
+		}
+		listSize--;
+		tail = tmp;
+		tail->next = nullptr;
+		delete ptr;
 	}
 
-	// Delete tail value
-	void DeleteTail(int value)
+	void RemoveHead()
 	{
-
+		Node<tData>* ptr = head;
+		head = ptr->next;
+		listSize--;
+		delete ptr;
 	}
 
-	// Node search method
-	void SearchNode()
+	void AddHead(tData addData)
 	{
+		Node<tData>* ptr = new Node<tData>();
 
+		listSize++;
+		ptr->next = head;
+		ptr->data = addData;
+		head = ptr;
 	}
 
-
-	void PrintLinkedList(int value)
+	void AddPosition(int index, tData posData)
 	{
+		if (listSize < index || 0 > index)
+		{
+			std::cout << "Not found is index value..." << std::endl;
+			return;
+		}
 
+		Node<tData>* ptr = head;
+		Node<tData>* tmp = ptr;
+		Node<tData>* node = new Node<tData>;
+
+		node->data = posData;
+		node->next = nullptr;
+
+		for (int nextTail = 0; nextTail < index - 1; nextTail++)
+		{
+			tmp = ptr;
+			ptr = ptr->next;
+		}
+
+		tmp->next = node;
+		node->next = ptr;
+		listSize++;
+	}
+
+	void SearchValue(tData searchData)
+	{
+		Node<tData>* ptr = head;
+
+		int index = 0;
+		bool isFind = false;
+
+		while (ptr != nullptr)
+		{
+			index++;
+
+			if (ptr->data == searchData)
+			{
+				std::cout << searchData << " <- value is index, " << "be in the" << index << "place" << std::endl;
+			}
+		}
+
+		if (isFind == false)
+		{
+			std::cout << "Not found is" << searchData << "value" << std::endl;
+		}
+	}
+
+	int Size()
+	{
+		return listSize;
 	}
 };
 
-int main()
+
+int main(void)
 {
-	std::cout << "Not create is 'LinkedList'" << std::endl;
+	// std::cout << "Not Create is Linked List" << std::endl;
+
+
 
 	return 0;
 }
